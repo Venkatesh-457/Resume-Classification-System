@@ -1,0 +1,10 @@
+category,precision,recall,f1_score,support
+Business Analyst,0.8767,0.8533,0.8649,75
+Cloud Engineer,1.0,1.0,1.0,28
+Data Analyst,1.0,1.0,1.0,28
+Data Scientist,1.0,1.0,1.0,28
+DevOps Engineer,1.0,1.0,1.0,28
+Machine Learning Engineer,1.0,1.0,1.0,28
+Software Developer,0.8772,0.9615,0.9174,52
+UI/UX Designer,1.0,0.94,0.9691,50
+Web Developer,0.9149,0.9149,0.9149,47

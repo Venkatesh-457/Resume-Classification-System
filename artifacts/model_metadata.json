@@ -1,0 +1,33 @@
+{
+  "model_name": "Linear Support Vector Classifier (Calibrated)",
+  "classes": [
+    "Business Analyst",
+    "Cloud Engineer",
+    "Data Analyst",
+    "Data Scientist",
+    "DevOps Engineer",
+    "Machine Learning Engineer",
+    "Software Developer",
+    "UI/UX Designer",
+    "Web Developer"
+  ],
+  "n_classes": 9,
+  "n_train": 1453,
+  "n_test": 364,
+  "accuracy": 0.9451,
+  "macro_f1": 0.9629,
+  "weighted_f1": 0.9451,
+  "training_time_seconds": 0.503,
+  "latency_ms_per_sample": 0.017,
+  "random_seed": 42,
+  "timestamp": "2026-10-29T17:08:17.449379",
+  "vectorizer_config": {
+    "ngram_range": [
+      1,
+      2
+    ],
+    "max_features": 5000,
+    "min_df": 2,
+    "sublinear_tf": true
+  }
+}

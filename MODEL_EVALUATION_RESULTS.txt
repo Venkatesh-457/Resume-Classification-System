@@ -1,0 +1,102 @@
+=====================================================================================
+RESUME INTELLIGENCE PLATFORM — OFFICIAL MODEL EVALUATION REPORT
+=====================================================================================
+Generated At          : 2026-10-29 17:08:58
+Project Name          : Resume Intelligence: NLP-Based Resume Classification & ATS Analytics
+Random Seed           : 42 (Reproducible Stratified Partitioning)
+Champion Model        : Linear Support Vector Classifier (Calibrated)
+Overall Accuracy      : 94.51%
+Macro F1-Score        : 96.29%
+Weighted F1-Score     : 94.51%
+Inference Latency     : 0.017 ms / sample
+=====================================================================================
+
+1. DATASET COMPOSITION & SPLIT METHODOLOGY
+-------------------------------------------------------------------------------------
+• Raw Dataset Source  : data/raw/resume_dataset.csv (Standard 9-class benchmark)
+• External Source     : data/external/real_resumes_mapped.csv (Verified real resumes)
+• Deduplication       : Removed exact duplicates on raw resume text content.
+• Usable Records      : 1817 resumes across 9 categories
+• Train / Test Split  : 80% Train (1453 samples) / 20% Held-Out Test (364 samples)
+• Stratification      : Stratified by target category to preserve real-world proportions.
+• Data Leakage Guard  : Vectorizers & scaling transformations fitted on Train split only.
+
+Target Category Distribution (Full Dataset):
+  - Business Analyst             :  374 samples ( 20.6%)
+  - Software Developer           :  260 samples ( 14.3%)
+  - UI/UX Designer               :  247 samples ( 13.6%)
+  - Web Developer                :  236 samples ( 13.0%)
+  - Cloud Engineer               :  140 samples (  7.7%)
+  - Machine Learning Engineer    :  140 samples (  7.7%)
+  - Data Analyst                 :  140 samples (  7.7%)
+  - DevOps Engineer              :  140 samples (  7.7%)
+  - Data Scientist               :  140 samples (  7.7%)
+
+2. BENCHMARKED CLASSIFICATION MODELS (HELD-OUT TEST SET EVALUATION)
+-------------------------------------------------------------------------------------
+Algorithm                                     |    Acc | Mac Prec |  Mac Rec |   Mac F1 |   Wgt F1 | Train(s) | Lat(ms)
+-------------------------------------------------------------------------------------
+Multinomial Naive Bayes                       | 0.8929 |   0.9484 |   0.9175 |   0.9265 |   0.8946 |    0.007 |   0.001
+Complement Naive Bayes                        | 0.8764 |   0.9449 |   0.9030 |   0.9138 |   0.8778 |    0.007 |   0.000
+Logistic Regression                           | 0.9368 |   0.9606 |   0.9556 |   0.9574 |   0.9373 |    0.270 |   0.000
+Linear Support Vector Classifier (Calibrated) | 0.9451 |   0.9632 |   0.9633 |   0.9629 |   0.9451 |    0.503 |   0.017
+Random Forest Classifier                      | 0.9451 |   0.9692 |   0.9582 |   0.9623 |   0.9455 |    0.344 |   0.114
+-------------------------------------------------------------------------------------
+
+3. CHAMPION MODEL SELECTION RATIONALE
+-------------------------------------------------------------------------------------
+The selected champion algorithm is 'Linear Support Vector Classifier (Calibrated)'.
+Selection Criteria:
+1. Macro F1-Score: Highest score across candidate models, demonstrating robust
+   generalization across both majority and minority job categories.
+2. Calibrated Confidence: LinearSVC wrapped in CalibratedClassifierCV (Platt sigmoid
+   scaling) produces genuine mathematical class probabilities rather than raw margins.
+3. High Throughput: Inference latency under 0.1ms per resume enables real-time scoring.
+4. Overfitting Guard: Cross-validated calibration ensures holdout accuracy transfers reliably.
+
+4. PER-CLASS PERFORMANCE BREAKDOWN (CHAMPION MODEL)
+-------------------------------------------------------------------------------------
+Category                     | Precision |    Recall |  F1-Score |  Support
+-------------------------------------------------------------------------------------
+Business Analyst             |    0.8767 |    0.8533 |    0.8649 |       75
+Cloud Engineer               |    1.0000 |    1.0000 |    1.0000 |       28
+Data Analyst                 |    1.0000 |    1.0000 |    1.0000 |       28
+Data Scientist               |    1.0000 |    1.0000 |    1.0000 |       28
+DevOps Engineer              |    1.0000 |    1.0000 |    1.0000 |       28
+Machine Learning Engineer    |    1.0000 |    1.0000 |    1.0000 |       28
+Software Developer           |    0.8772 |    0.9615 |    0.9174 |       52
+UI/UX Designer               |    1.0000 |    0.9400 |    0.9691 |       50
+Web Developer                |    0.9149 |    0.9149 |    0.9149 |       47
+-------------------------------------------------------------------------------------
+
+5. NLP FEATURE REPRESENTATION EXPERIMENTS (5-Fold Stratified Cross-Validation)
+-------------------------------------------------------------------------------------
+• Word TF-IDF (Unigrams)              | Dim:  5000 | Sparsity: 97.59% | Macro F1: 0.9497 (±0.0103)
+• Word TF-IDF (Unigrams + Bigrams)    | Dim:  5000 | Sparsity: 96.7% | Macro F1: 0.9539 (±0.0088)
+• Character TF-IDF (3-5 Grams)        | Dim:  4000 | Sparsity: 68.8% | Macro F1: 0.9529 (±0.0080)
+• Hybrid FeatureUnion (Word + Char)   | Dim:  8000 | Sparsity: 84.51% | Macro F1: 0.9608 (±0.0068)
+
+6. CONFUSION MATRIX (CHAMPION MODEL ON TEST PARTITION)
+-------------------------------------------------------------------------------------
+Rows: True Labels, Columns: Predicted Labels
+Categories: Busi, Clou, Data, Data, DevO, Mach, Soft, UI/U, Web 
+
+True \ Pred      Busi  Clou  Data  Data  DevO  Mach  Soft  UI/U  Web 
+---------------------------------------------------------------------
+Busi               64     0     0     0     0     0     7     0     4
+Clou                0    28     0     0     0     0     0     0     0
+Data                0     0    28     0     0     0     0     0     0
+Data                0     0     0    28     0     0     0     0     0
+DevO                0     0     0     0    28     0     0     0     0
+Mach                0     0     0     0     0    28     0     0     0
+Soft                2     0     0     0     0     0    50     0     0
+UI/U                3     0     0     0     0     0     0    47     0
+Web                 4     0     0     0     0     0     0     0    43
+
+7. MODEL LIMITATIONS & ACADEMIC DISCLAIMER
+-------------------------------------------------------------------------------------
+1. Classification relies on statistical patterns within the training corpus and domain keywords.
+2. Cross-domain resumes (e.g. a Fullstack Developer applying for DevOps) may exhibit close margins.
+3. This system is designed for educational analytics and resume optimization assistance.
+4. Automated classification decisions should always be reviewed alongside human appraisal.
+=====================================================================================
